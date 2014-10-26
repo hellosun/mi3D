@@ -15,7 +15,7 @@ mi3D
 
 ###资料
 
-http://106.187.50.149/alibaba/
+http://106.187.50.149/alibaba/ 这个页面在demo文件夹里
 
 http://threejs.org/
 
