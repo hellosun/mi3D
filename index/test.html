@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <script src="js/three.min.js" type="text/javascript"></script>
+    <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="container"></div>
+
+<script>
+    // 设置场景大小
+    var WIDTH = 400,
+        HEIGHT = 300;
+    // 设置一些相机参数
+    var VIEW_ANGLE = 45,
+            ASPECT = WIDTH / HEIGHT,
+            NEAR = 0.1,
+            FAR = 10000;
+    // 获取DOM结构中的元素
+    // - 假设我们使用了JQuery
+    var $container = $('#container');
+    // 创建渲染器、相机和场景
+    var renderer = new THREE.WebGLRenderer();
+    var camera =new THREE.PerspectiveCamera(
+                    VIEW_ANGLE,
+                    ASPECT,
+                    NEAR,
+                    FAR);
+    //创建场景
+    var scene = new THREE.Scene();
+
+    // 将相机加入场景
+    scene.add(camera);
+
+    // 相机的初始位置为原点
+    // 将相机拉回来一些（译者注：这样才能看到原点）
+    camera.position.z = 300;
+    // 启动渲染器
+    renderer.setSize(WIDTH, HEIGHT);
+    // 将渲染器加到DOM结构中
+    $container.append(renderer.domElement);
+
+    // 创建球体表面的材质
+    var sphereMaterial =
+            new THREE.MeshLambertMaterial(
+                    {
+                        color: 0xCCCCCC
+                    });
+
+    // 创建一个点光源
+    var pointLight =
+            new THREE.PointLight(0xFFFFFF);
+    // 设置点光源的位置
+    pointLight.position.x = 10;
+    pointLight.position.y = 50;
+    pointLight.position.z = 130;
+    // 将点光源加入场景
+    scene.add(pointLight);
+
+
+    // 设置球体参数（译者注：球体被划分为16×16的网格，如果后两个参数取4、2，则生成一个八面体，请想象）
+    var radius = 50,segments = 16,rings = 16;
+    // material覆盖在geometry上，生成mesh
+    var sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(
+                    radius,
+                    segments,
+                    rings),
+            sphereMaterial);
+    // 将mesh加入到场景中
+    scene.add(sphere);
+    // 画!
+    renderer.render(scene, camera);
+</script>
+</body>
+</html>
