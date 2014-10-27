@@ -15,6 +15,9 @@ mi3D
 
 ###资料
 
+[three.js docs](http://threejs.org/docs/)
+
+
 http://106.187.50.149/alibaba/ 这个页面在ipo-demo文件夹里
 
 http://threejs.org/

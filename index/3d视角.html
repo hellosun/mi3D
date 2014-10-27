@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <script src="js/three.min.js" type="text/javascript"></script>
+    <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
+</head>
+<body>
+<style>
+    body {
+        font-family: Monospace;
+        background-color: #f0f0f0;
+        margin: 0px;
+        overflow: hidden;
+    }
+</style>
+<script src="js/renderers/Projector.js" type="text/javascript"></script>
+<script src="js/renderers/CanvasRenderer.js" type="text/javascript"></script>
+<div id="container"></div>
+
+<script>
+
+    var isUserInteracting = false;//用户视角操作
+
+    var container = document.getElementById("container");
+    var camera, scene, renderer;
+
+    var raycaster;
+
+    var PI2 = Math.PI * 2;
+
+
+    //填充
+    var programFill = function (context) {
+        context.beginPath();
+        context.arc(0, 0, 0.5, 0, PI2, true);
+        context.fill();
+
+    };
+
+    //描边
+    var programStroke = function (context) {
+        context.lineWidth = 0.025;
+        context.beginPath();
+        context.arc(0, 0, 0.5, 0, PI2, true);
+        context.stroke();
+
+    };
+
+    var mouse = { x: 0, y: 0 },
+            INTERSECTED//相交的object;
+
+    init();
+    animate();
+
+    function init() {
+
+        camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set(0, 300, 500);
+
+        scene = new THREE.Scene();
+
+        //制作球体
+        for (var i = 0; i < 100; i++) {
+            var particle = new THREE.Sprite(new THREE.SpriteCanvasMaterial({ color: Math.random() * 0x808080 + 0x808080, program: programStroke }));
+            particle.position.x = Math.random() * 800 - 400;
+            particle.position.y = Math.random() * 800 - 400;
+            particle.position.z = Math.random() * 800 - 400;
+            particle.scale.x = particle.scale.y = Math.random() * 20 + 20;
+            scene.add(particle);
+        }
+
+        //
+
+        raycaster = new THREE.Raycaster();
+
+        renderer = new THREE.CanvasRenderer();
+        renderer.setClearColor(0xf0f0f0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+
+        //事件注册
+
+        document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+        //onWindowResize
+        window.addEventListener('resize', onWindowResize, false);
+
+    }
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onDocumentMouseMove(event) {
+
+        event.preventDefault();
+
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+
+    }
+
+    //自动旋转
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+    }
+
+
+    var radius = 600;
+    var theta = 0;
+
+    function render() {
+        if (isUserInteracting == false) {
+            // rotate camera
+            theta += 0.1;//镜头旋转速度系数
+        }
+
+        camera.position.x = radius * Math.sin(THREE.Math.degToRad(theta));
+        camera.position.y = radius * Math.sin(THREE.Math.degToRad(theta));
+        camera.position.z = radius * Math.cos(THREE.Math.degToRad(theta));
+        camera.lookAt(scene.position);
+
+        // find intersections
+
+        camera.updateMatrixWorld();
+
+        var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
+
+        raycaster.ray.set(camera.position, vector.sub(camera.position).normalize());
+
+        var intersects = raycaster.intersectObjects(scene.children);
+
+
+        //如果这个xy点上存在3d，则选择z轴最前面的球体做反馈交互
+        if (intersects.length > 0) {
+            if (INTERSECTED != intersects[ 0 ].object) {
+                if (INTERSECTED) INTERSECTED.material.program = programStroke;
+                INTERSECTED = intersects[ 0 ].object;
+                INTERSECTED.material.program = programFill;
+            }
+
+        } else {
+            if (INTERSECTED) INTERSECTED.material.program = programStroke;
+            INTERSECTED = null;
+        }
+        renderer.render(scene, camera);
+    }
+
+</script>
+</body>
+</html>
