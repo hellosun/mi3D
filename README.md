@@ -15,9 +15,6 @@ mi3D
 
 ###资料
 
-[three.js docs](http://threejs.org/docs/)
-
-
 http://106.187.50.149/alibaba/ 这个页面在ipo-demo文件夹里
 
 http://threejs.org/
@@ -26,17 +23,9 @@ http://stars.chromeexperiments.com/
 
 
 技术实现点：
-
 1. 3d视角拖动
-2. 宇宙3d场景
-3. 3d场景镜头推进
-4. 自转（可以用镜头自转实现）
-5. 轨迹线  Bezier 贝塞尔曲线
-6. 流星运动
-7. 球体发光
-
-
-
+2. 自转
+3. 轨迹线  Bezier 贝塞尔曲线
 
 
 ##### 学习：
@@ -47,3 +36,10 @@ http://stars.chromeexperiments.com/
 * 场景自转 ：http://threejs.org/examples/#canvas_geometry_panorama
 * 光线 ：http://threejs.org/examples/#canvas_lights_pointlights
 * 曲线 ：http://threejs.org/examples/#canvas_lines
+* 球体运动：http://threejs.org/examples/#webgl_geometry_large_mesh
+* 球体运动：http://threejs.org/examples/#webgl_materials2
+
+
+#### 旋转组件
+1. TrackballControls.js：http://threejs.org/examples/#webgl_geometry_tessellation   -- 
+2. OrbitControls.js：http://threejs.org/examples/webgl_geometry_subdivision.html
