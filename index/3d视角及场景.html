@@ -67,8 +67,8 @@
 
     function init() {
 
-        camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-        camera.position.set(0, 300, 500);
+        camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set(0, 600, 1500);
 
         scene = new THREE.Scene();
 
@@ -136,9 +136,14 @@
     }
 
     function onDocumentMouseWheel(event) {
-        console.log(camera.fov, '====');
-        camera.fov -= event.wheelDeltaY * 0.05;
-        camera.updateProjectionMatrix();
+        //fov.视角远近角度:30~150
+        var fov = camera.fov;
+        fov -= event.wheelDeltaY * 0.05;
+        console.log(fov);
+        if (fov > 30 && fov < 150) {
+            camera.fov = fov;
+            camera.updateProjectionMatrix();
+        }
     }
 
     function onDocumentTouchStart(event) {
